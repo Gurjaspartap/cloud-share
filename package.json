@@ -11,7 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.893.0",
     "@aws-sdk/s3-request-presigner": "^3.893.0",
-    "firebase": "^10.14.1",
+    "firebase": "^12.3.0",
     "firebaseui": "^6.1.0",
     "next": "15.5.3",
     "react": "19.1.0",
