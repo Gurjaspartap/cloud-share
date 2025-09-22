@@ -50,7 +50,7 @@ export default function Home() {
       <h2 className="text-xl mt-4">Your Files:</h2>
       <ul>
         {files.map(f => (
-          <li key={f}><a href={`https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${f}`} target="_blank" className="text-blue-600 underline">{f.split("/").pop()}</a></li>
+          <li key={f}><a href={`https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${f}`} target="_blank" className="text-blue-600 underline">{f.split("/").pop()}</a></li>
         ))}
       </ul>
     </div>
