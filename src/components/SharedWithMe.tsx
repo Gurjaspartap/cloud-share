@@ -3,14 +3,33 @@
 // ============================================
 
 import { Users } from 'lucide-react';
-import FileGrid from './FileGrid';
+import SharedFileCard from './SharedFileCard';
 import { FileType } from '@/app/home/page';
 
 type SharedWithMeProps = {
   files: FileType[];
 };
 
+type SharedFileType = FileType & {
+  sharedBy?: string;
+  sharedAt?: string;
+  permissions?: 'view' | 'download' | 'edit';
+  message?: string;
+};
+
 export default function SharedWithMe({ files }: SharedWithMeProps) {
+  const handleDownload = (file: any) => {
+    if (file.downloadUrl) {
+      const link = document.createElement('a');
+      link.href = file.downloadUrl;
+      link.download = file.name;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -27,11 +46,15 @@ export default function SharedWithMe({ files }: SharedWithMeProps) {
           <p className="text-gray-500 text-lg">No files shared with you yet</p>
         </div>
       ) : (
-        <FileGrid 
-          files={files} 
-          onShare={() => {}}
-          onDelete={() => {}}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {files.map((file) => (
+            <SharedFileCard
+              key={file.id}
+              file={file}
+              onDownload={handleDownload}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

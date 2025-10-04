@@ -6,7 +6,9 @@ import Header from '@/components/Header';
 import FileUpload from '@/components/FileUpload';
 import FileGrid from '@/components/FileGrid';
 import SharedWithMe from '@/components/SharedWithMe';
+import ShareModal from '@/components/ShareModal';
 import AuthGuard from '@/components/AuthGuard';
+import { ShareSettings } from '@/components/ShareModal';
 
 export type FileType = {
   id: string;
@@ -24,23 +26,10 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<'myfiles' | 'shared'>('myfiles');
   const [files, setFiles] = useState<FileType[]>([]);
   const [uid, setUid] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  const [sharedFiles, setSharedFiles] = useState<FileType[]>([
-    {
-      id: '5',
-      name: 'Team Report.docx',
-      size: '1.8 MB',
-      type: 'document',
-      uploadDate: '2024-10-02'
-    },
-    {
-      id: '6',
-      name: 'Meeting Notes.pdf',
-      size: '856 KB',
-      type: 'document',
-      uploadDate: '2024-09-30'
-    }
-  ]);
+  const [sharedFiles, setSharedFiles] = useState<FileType[]>([]);
 
   const handleFileUpload = async (uploadedFiles: File[]) => {
     if (!uid) return;
@@ -81,8 +70,47 @@ export default function HomePage() {
   };
 
   const handleShare = (fileId: string) => {
-    console.log('Share file:', fileId);
-    // Add your share logic here
+    const file = files.find(f => f.id === fileId);
+    if (file) {
+      setSelectedFile(file);
+      setIsShareModalOpen(true);
+    }
+  };
+
+  const handleShareSubmit = async (settings: ShareSettings) => {
+    console.log("handleShareSubmit", settings);
+    if (!selectedFile || !uid) return;
+
+    // try {
+    //   const response = await fetch('/api/share', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       fileId: selectedFile.id,
+    //       fileName: selectedFile.name,
+    //       ownerId: uid,
+    //       sharedWith: settings.users,
+    //       message: settings.message,
+    //       linkSettings: settings.linkSettings,
+    //       shareType: settings.type
+    //     }),
+    //   });
+
+    //   const result = await response.json();
+      
+    //   if (response.ok) {
+    //     console.log('Share created successfully:', result);
+    //     // You could show a success toast here
+    //   } else {
+    //     console.error('Failed to create share:', result.error);
+    //     throw new Error(result.error);
+    //   }
+    // } catch (error) {
+    //   console.error('Error sharing file:', error);
+    //   throw error;
+    // }
   };
 
   const handleDelete = async (fileId: string) => {
@@ -124,7 +152,23 @@ export default function HomePage() {
       console.error("Error fetching files:", error);
     }
   };
-  useEffect(() => { fetchFiles(); }, [uid]);
+
+  const fetchSharedFiles = async () => {
+    if (!uid) return;
+    try {
+      const res = await fetch(`/api/shared-files?userId=${uid}`);
+      const data = await res.json();
+      setSharedFiles(data.files || []);
+      console.log("Shared files from API:", data.files);
+    } catch (error) {
+      console.error("Error fetching shared files:", error);
+    }
+  };
+
+  useEffect(() => { 
+    fetchFiles(); 
+    fetchSharedFiles();
+  }, [uid]);
 
   return (
     <AuthGuard>
@@ -161,6 +205,19 @@ export default function HomePage() {
           </main>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {selectedFile && (
+        <ShareModal
+          file={selectedFile}
+          isOpen={isShareModalOpen}
+          onClose={() => {
+            setIsShareModalOpen(false);
+            setSelectedFile(null);
+          }}
+          onShare={handleShareSubmit}
+        />
+      )}
     </AuthGuard>
   );
 }
