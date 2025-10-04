@@ -1,3 +1,4 @@
+import { logoutUser } from '@/lib/firebaseFunctions';
 import { Cloud, FolderOpen, Users, Settings, LogOut } from 'lucide-react';
 
 type SidebarProps = {
@@ -40,8 +41,8 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
           <Settings className="w-5 h-5" />
           <span className="font-medium">Settings</span>
         </button>
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all mt-2">
-          <LogOut className="w-5 h-5" />
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all mt-2" onClick={logoutUser}>
+          <LogOut className="w-5 h-5"  />
           <span className="font-medium">Logout</span>
         </button>
       </div>

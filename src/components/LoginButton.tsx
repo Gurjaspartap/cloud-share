@@ -5,6 +5,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebaseClient";
 
 export default function LoginButton() {
+  console.log("LoginButton rendered");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleClick = useCallback(async () => {
@@ -13,9 +14,20 @@ export default function LoginButton() {
       const auth = getFirebaseAuth();
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+      console.log("LoginButton handleClick", result);
       const uid = result.user?.uid;
+      console.log("LoginButton handleClick", result.user);
       if (uid) {
         localStorage.setItem("uid", uid);
+      }
+      if (result.user?.displayName) {
+        localStorage.setItem("displayName", result.user.displayName);
+      }
+      if (result.user?.email) {
+        localStorage.setItem("email", result.user.email);
+      }
+      if (result.user?.photoURL) {
+        localStorage.setItem("photoURL", result.user.photoURL);
       }
       router.push("/home");
     } catch (error) {

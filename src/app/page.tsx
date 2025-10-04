@@ -1,8 +1,9 @@
 // app/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFirebaseUser } from '@/hooks/useFirebaseUser';
 import { Cloud, Upload, Shield, Users, Zap, Lock, ChevronRight } from 'lucide-react';
 import { 
   createUserWithEmailAndPassword, 
@@ -15,10 +16,18 @@ import { getFirebaseAuth } from '@/lib/firebaseClient';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useFirebaseUser();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Redirect authenticated users to home page
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push('/home');
+    }
+  }, [user, authLoading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +84,18 @@ export default function LandingPage() {
       setLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 via-gray-900 to-slate-800">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-gray-900 to-slate-800">

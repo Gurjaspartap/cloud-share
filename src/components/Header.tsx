@@ -1,8 +1,63 @@
-// ============================================
-// components/Header.tsx
-// ============================================
-
+"use client";
 import { Search, Bell } from 'lucide-react';
+import { useFirebaseUserProfile } from '@/hooks/useFirebaseUser';
+//import userImage from '/user.png';
+// Default user image path
+const defaultUserImage = '/user.png';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+
+// Client-only component for user profile to avoid hydration issues
+function UserProfileSection() {
+  const { 
+    userProfile, 
+    loading, 
+    isAuthenticated, 
+    getUserInitials, 
+    getUserName, 
+    getUserEmail, 
+    getUserPhoto 
+  } = useFirebaseUserProfile();
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-4 ml-6">
+        <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated && userProfile) {
+    const profileImage = getUserPhoto() || defaultUserImage;
+    return (
+      <div className="flex items-center gap-3">
+        <Image 
+          src={profileImage} 
+          alt="User" 
+          width={40} 
+          height={40} 
+          className="rounded-full object-cover"
+        />
+        <div>
+          <p className="text-sm font-semibold text-gray-900">{getUserName()}</p>
+          <p className="text-xs text-gray-500">{getUserEmail()}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-semibold">
+        ?
+      </div>
+      <div>
+        <p className="text-sm font-semibold text-gray-900">Not signed in</p>
+        <p className="text-xs text-gray-500">Please log in</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Header() {
   return (
@@ -25,15 +80,7 @@ export default function Header() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-              JD
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-900">John Doe</p>
-              <p className="text-xs text-gray-500">john@example.com</p>
-            </div>
-          </div>
+          <UserProfileSection />
         </div>
       </div>
     </header>
