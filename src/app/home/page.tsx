@@ -61,13 +61,6 @@ export default function HomePage() {
     fetchFiles();
   };
 
-  const getFileType = (mimeType: string): FileType['type'] => {
-    if (mimeType.startsWith('image/')) return 'image';
-    if (mimeType.startsWith('video/')) return 'video';
-    if (mimeType.startsWith('audio/')) return 'audio';
-    if (mimeType.includes('document') || mimeType.includes('pdf')) return 'document';
-    return 'other';
-  };
 
   const handleShare = (fileId: string) => {
     const file = files.find(f => f.id === fileId);
@@ -168,7 +161,7 @@ export default function HomePage() {
   useEffect(() => { 
     fetchFiles(); 
     fetchSharedFiles();
-  }, [uid]);
+  }, [uid, fetchFiles, fetchSharedFiles]);
 
   return (
     <AuthGuard>

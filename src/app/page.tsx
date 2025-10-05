@@ -9,8 +9,7 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   GoogleAuthProvider, 
-  signInWithPopup,
-  signOut 
+  signInWithPopup
 } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
 
@@ -42,8 +41,12 @@ export default function LandingPage() {
       const auth = getFirebaseAuth();
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/home');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     } finally {
       setLoading(false);
     }
@@ -62,8 +65,12 @@ export default function LandingPage() {
       const auth = getFirebaseAuth();
       await createUserWithEmailAndPassword(auth, email, password);
       router.push('/home');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     } finally {
       setLoading(false);
     }
@@ -78,8 +85,12 @@ export default function LandingPage() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.push('/home');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     } finally {
       setLoading(false);
     }
@@ -294,7 +305,7 @@ export default function LandingPage() {
             </form>
             
             <p className="text-center text-gray-600 mt-4">
-              Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
               <button
                 onClick={() => {
                   setIsLoginModalOpen(false);

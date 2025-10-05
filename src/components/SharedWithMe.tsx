@@ -10,15 +10,9 @@ type SharedWithMeProps = {
   files: FileType[];
 };
 
-type SharedFileType = FileType & {
-  sharedBy?: string;
-  sharedAt?: string;
-  permissions?: 'view' | 'download' | 'edit';
-  message?: string;
-};
 
 export default function SharedWithMe({ files }: SharedWithMeProps) {
-  const handleDownload = (file: any) => {
+  const handleDownload = (file: FileType) => {
     if (file.downloadUrl) {
       const link = document.createElement('a');
       link.href = file.downloadUrl;

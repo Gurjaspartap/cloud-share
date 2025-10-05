@@ -4,7 +4,7 @@
 // ============================================
 
 import { useState } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 type FileUploadProps = {
   onUpload: (files: File[]) => void;

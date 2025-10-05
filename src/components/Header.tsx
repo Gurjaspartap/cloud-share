@@ -5,7 +5,6 @@ import { useFirebaseUserProfile } from '@/hooks/useFirebaseUser';
 // Default user image path
 const defaultUserImage = '/user.png';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 
 // Client-only component for user profile to avoid hydration issues
 function UserProfileSection() {
@@ -13,7 +12,6 @@ function UserProfileSection() {
     userProfile, 
     loading, 
     isAuthenticated, 
-    getUserInitials, 
     getUserName, 
     getUserEmail, 
     getUserPhoto 

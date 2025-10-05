@@ -6,6 +6,7 @@
 import { FileText, Image, Video, Music, File, Share2, Download, Trash2, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
 import { FileType } from '@/app/home/page';
+import NextImage from 'next/image';
 
 type FileCardProps = {
   file: FileType;
@@ -66,9 +67,11 @@ export default function FileCard({ file, onShare, onDelete }: FileCardProps) {
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
       {file.thumbnail ? (
         <div className="h-48 overflow-hidden">
-          <img
+          <NextImage
             src={file.thumbnail}
             alt={file.name}
+            width={400}
+            height={192}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
         </div>

@@ -35,7 +35,7 @@ export default function LoginButton() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   return (
     <button

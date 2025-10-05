@@ -1,6 +1,7 @@
 import { FileText, Image, Video, Music, File, Download, User, Calendar, MessageSquare, Eye, Download as DownloadIcon, Edit } from 'lucide-react';
 import { useState } from 'react';
 import { FileType } from '@/app/home/page';
+import NextImage from 'next/image';
 
 type SharedFileType = FileType & {
   sharedBy?: string;
@@ -84,9 +85,11 @@ export default function SharedFileCard({ file, onDownload }: SharedFileCardProps
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
       {file.thumbnail ? (
         <div className="h-48 overflow-hidden">
-          <img
+          <NextImage
             src={file.thumbnail}
             alt={file.name}
+            width={400}
+            height={192}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
         </div>
@@ -137,7 +140,7 @@ export default function SharedFileCard({ file, onDownload }: SharedFileCardProps
             </button>
             {showMessage && (
               <div className="mt-2 p-2 bg-gray-50 rounded-lg text-sm text-gray-700">
-                "{file.message}"
+                &quot;{file.message}&quot;
               </div>
             )}
           </div>

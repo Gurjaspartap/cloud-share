@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Users, Link, Copy, Mail, Check, AlertCircle } from 'lucide-react';
+import { X, Copy, Mail, Check } from 'lucide-react';
 import { FileType } from '@/app/home/page';
 
 export type ShareUser = {
@@ -28,11 +28,11 @@ type ShareModalProps = {
   onShare: (settings: ShareSettings) => Promise<void>;
 };
 
-export default function ShareModal({ file, isOpen, onClose, onShare }: ShareModalProps) {
-  const [shareType, setShareType] = useState('link');
-  const [users, setUsers] = useState<ShareUser[]>([]);
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [message, setMessage] = useState('');
+export default function ShareModal({ file, isOpen, onClose }: ShareModalProps) {
+
+ 
+ 
+
   const [linkSettings, setLinkSettings] = useState({
     expiresIn: 7,
     password: '',
@@ -41,7 +41,8 @@ export default function ShareModal({ file, isOpen, onClose, onShare }: ShareModa
   const [isLoading, setIsLoading] = useState(false);
   const [shareLink, setShareLink] = useState('');
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
+  console.log("error",error)
 
  
 
@@ -78,14 +79,14 @@ export default function ShareModal({ file, isOpen, onClose, onShare }: ShareModa
     }
   }
 
-  const handleShare = async (file:any) => {
+  const handleShare = async (file: FileType) => {
     setIsLoading(true);
     setError('');
 
     try {
      
       
-      if (shareType === 'link') {
+      if ("link" === 'link') {
         // Generate share link using the API
         if (!file.key) {
           throw new Error('File key is missing');
@@ -99,8 +100,8 @@ export default function ShareModal({ file, isOpen, onClose, onShare }: ShareModa
       } else {
         //onClose();
       }
-    } catch (err) {
-      setError('Failed to share file. Please try again.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setIsLoading(false);
     }
